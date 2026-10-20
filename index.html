@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#3b3128">
+    <title>Piano Chords</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="js/theory.js" defer></script>
+    <script src="js/a11y.js" defer></script>
+    <script src="js/config.js" defer></script>
+    <script src="js/staff.js" defer></script>
+    <script src="js/keyboard.js" defer></script>
+    <script src="js/configure.js" defer></script>
+    <script src="js/practice.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+<main id="home" class="screen">
+    <h1 tabindex="-1">Piano Chords</h1>
+    <nav class="menu">
+        <button type="button" data-screen="practice">Practice</button>
+        <button type="button" data-screen="configure">Configure</button>
+    </nav>
+</main>
+<section id="configure" class="screen" hidden>
+    <header class="bar">
+        <button type="button" class="back" data-screen="home"><span aria-hidden="true">←</span> Back</button>
+        <h2 tabindex="-1">Configure</h2>
+        <button type="button" id="reset">Reset</button>
+    </header>
+    <div id="options" class="options"></div>
+</section>
+<section id="practice" class="screen" hidden>
+    <div class="question">
+        <h2 class="visually-hidden" tabindex="-1">Practice</h2>
+        <button type="button" class="back" data-screen="home"><span aria-hidden="true">←</span> Back</button>
+        <button type="button" id="skip" class="skip">Skip <span aria-hidden="true">→</span></button>
+        <div id="question"></div>
+    </div>
+    <div id="keyboard" class="keyboard" role="group" aria-label="Piano keyboard">
+        <p id="keyboard-help" class="visually-hidden">Use the arrow keys to move between keys, Home and End to jump to the ends, and Enter or Space to press a key.</p>
+        <p class="keyboard-hint" aria-hidden="true">← → to move · Enter to press</p>
+    </div>
+</section>
+<div class="rotate">Rotate your device to landscape</div>
+<div id="status" class="visually-hidden" aria-live="polite"></div>
+</body>
+</html>
