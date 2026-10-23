@@ -3,10 +3,19 @@ const STEP = 5;
 const SIGNATURE_X = 50;
 const SIGNATURE_SPACING = 8;
 const NOTE_GAP = 34;
+const SCALE_NOTE_SPACING = 30;
+const NOTE_MARGIN = 30;
 const SECOND_OFFSET = 12;
 const LEDGER_HALF = 9;
 const SHARP_POSITIONS = [[3, 38], [0, 35], [4, 39], [1, 36], [5, 33], [2, 37], [6, 34]];
 const FLAT_POSITIONS = [[6, 34], [2, 37], [5, 33], [1, 36], [4, 32], [0, 35], [3, 31]];
+const ACCIDENTAL_PATHS = new Map([
+    [-2, (x, y) => `${flatPath(x - 3, y)} ${flatPath(x + 3, y)}`],
+    [-1, (x, y) => flatPath(x, y)],
+    [0, (x, y) => `M ${x - 2} ${y - 8} V ${y + 3} L ${x + 2} ${y + 1.5} M ${x + 2} ${y + 8} V ${y - 3} L ${x - 2} ${y - 1.5}`],
+    [1, (x, y) => `M ${x - 1.5} ${y - 7} V ${y + 8} M ${x + 1.5} ${y - 8} V ${y + 7} M ${x - 4} ${y - 1.5} L ${x + 4} ${y - 3.5} M ${x - 4} ${y + 3.5} L ${x + 4} ${y + 1.5}`],
+    [2, (x, y) => `M ${x - 3} ${y - 3} l 6 6 m 0 -6 l -6 6`],
+]);
 
 const CLEFS = [
     {
@@ -30,40 +39,12 @@ const CLEFS = [
 ];
 
 function renderStaff(clef, signature, notes) {
-    const y = (position) => 40 - (position - clef.bottomLine) * STEP;
-    const svg = element('svg', { class: 'staff', role: 'img', 'aria-label': staffLabel(clef) });
-
-    const clefGroup = element('g', { transform: 'translate(8 0)' });
-    clefGroup.append(element('path', { d: clef.path, class: 'clef' }));
-    for (const [cx, cy, r] of clef.dots) {
-        clefGroup.append(element('circle', { cx, cy, r, class: 'clef-dot' }));
-    }
-    svg.append(clefGroup);
-
-    let signatureX = SIGNATURE_X;
-    for (const [accidental, positions] of [[1, SHARP_POSITIONS], [-1, FLAT_POSITIONS]]) {
-        for (const [letter, position] of positions) {
-            if (signature[letter] === accidental) {
-                svg.append(symbol(writtenAccidental(accidental), signatureX, y(position + clef.signatureShift)));
-                signatureX += SIGNATURE_SPACING;
-            }
-        }
-    }
-
-    const noteX = signatureX + NOTE_GAP;
-    const width = noteX + 30;
-    svg.setAttribute('viewBox', `0 -45 ${width} 130`);
-    for (let line = 0; line < 5; line++) {
-        svg.prepend(element('line', { x1: 2, x2: width - 2, y1: line * 2 * STEP, y2: line * 2 * STEP, class: 'staff-line' }));
-    }
+    const { svg, y, noteX } = staffFrame(clef, signature, 'a chord', NOTE_MARGIN);
 
     const sorted = [...notes].sort((a, b) => a.position - b.position);
     const xs = noteXs(sorted, noteX);
     for (let i = 0; i < sorted.length; i++) {
-        for (const position of ledgerPositions(clef, sorted[i].position)) {
-            svg.append(element('line', { x1: xs[i] - LEDGER_HALF, x2: xs[i] + LEDGER_HALF, y1: y(position), y2: y(position), class: 'ledger' }));
-        }
-        svg.append(element('ellipse', { cx: xs[i], cy: y(sorted[i].position), rx: 5.6, ry: 3.9, class: 'notehead' }));
+        drawNote(svg, clef, y, xs[i], sorted[i].position);
     }
 
     const columns = [];
@@ -79,23 +60,70 @@ function renderStaff(clef, signature, notes) {
         }
         columns[column].push(note.position);
         const x = noteX - 14 - column * 10;
-        if (note.accidental === 2) {
-            svg.append(element('path', { d: `M ${x - 3} ${y(note.position) - 3} l 6 6 m 0 -6 l -6 6`, class: 'double-sharp' }));
-            continue;
-        }
-        svg.append(symbol(writtenAccidental(note.accidental), x, y(note.position)));
+        svg.append(accidentalMark(note.accidental, x, y(note.position)));
     }
     return svg;
 }
 
-function staffLabel(clef) {
-    return `${clef.name} clef staff showing a chord`;
+function renderScaleStaff(clef, signature, notes) {
+    const { svg, y, noteX } = staffFrame(clef, signature, 'a scale', (notes.length - 1) * SCALE_NOTE_SPACING + NOTE_MARGIN);
+    for (let i = 0; i < notes.length; i++) {
+        const x = noteX + i * SCALE_NOTE_SPACING;
+        drawNote(svg, clef, y, x, notes[i].position);
+        if (notes[i].accidental !== signature[notes[i].letter]) {
+            svg.append(accidentalMark(notes[i].accidental, x - 14, y(notes[i].position)));
+        }
+    }
+    return svg;
 }
 
-function symbol(text, x, y) {
-    const node = element('text', { x, y, class: 'accidental' });
-    node.textContent = text;
-    return node;
+function staffFrame(clef, signature, subject, notesWidth) {
+    const y = (position) => 40 - (position - clef.bottomLine) * STEP;
+    const svg = element('svg', { class: 'staff', role: 'img', 'aria-label': staffLabel(clef, subject) });
+
+    const clefGroup = element('g', { transform: 'translate(8 0)' });
+    clefGroup.append(element('path', { d: clef.path, class: 'clef' }));
+    for (const [cx, cy, r] of clef.dots) {
+        clefGroup.append(element('circle', { cx, cy, r, class: 'clef-dot' }));
+    }
+    svg.append(clefGroup);
+
+    let signatureX = SIGNATURE_X;
+    for (const [accidental, positions] of [[1, SHARP_POSITIONS], [-1, FLAT_POSITIONS]]) {
+        for (const [letter, position] of positions) {
+            if (signature[letter] === accidental) {
+                svg.append(accidentalMark(accidental, signatureX, y(position + clef.signatureShift)));
+                signatureX += SIGNATURE_SPACING;
+            }
+        }
+    }
+
+    const noteX = signatureX + NOTE_GAP;
+    const width = noteX + notesWidth;
+    svg.setAttribute('viewBox', `0 -45 ${width} 130`);
+    for (let line = 0; line < 5; line++) {
+        svg.prepend(element('line', { x1: 2, x2: width - 2, y1: line * 2 * STEP, y2: line * 2 * STEP, class: 'staff-line' }));
+    }
+    return { svg, y, noteX };
+}
+
+function drawNote(svg, clef, y, x, position) {
+    for (const ledger of ledgerPositions(clef, position)) {
+        svg.append(element('line', { x1: x - LEDGER_HALF, x2: x + LEDGER_HALF, y1: y(ledger), y2: y(ledger), class: 'ledger' }));
+    }
+    svg.append(element('ellipse', { cx: x, cy: y(position), rx: 5.6, ry: 3.9, class: 'notehead' }));
+}
+
+function staffLabel(clef, subject) {
+    return `${clef.name} clef staff showing ${subject}`;
+}
+
+function accidentalMark(accidental, x, y) {
+    return element('path', { d: ACCIDENTAL_PATHS.get(accidental)(x, y), class: 'accidental' });
+}
+
+function flatPath(x, y) {
+    return `M ${x - 2} ${y - 11} V ${y + 3.5} C ${x + 5} ${y} ${x + 3} ${y - 4.5} ${x - 2} ${y - 1}`;
 }
 
 function noteXs(sorted, noteX) {

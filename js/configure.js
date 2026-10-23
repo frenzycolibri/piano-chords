@@ -1,13 +1,19 @@
 function renderOptions(container, config) {
-    const fieldsets = [];
-    for (const group of CONFIG_GROUPS) {
-        fieldsets.push(renderGroup(group, config));
+    const nodes = [];
+    for (const section of CONFIG_SECTIONS) {
+        const heading = document.createElement('h3');
+        heading.className = 'options-title';
+        heading.textContent = section.title;
+        nodes.push(heading);
+        for (const group of section.groups) {
+            nodes.push(renderGroup(group, config[section.key], config));
+        }
     }
-    container.replaceChildren(...fieldsets);
+    container.replaceChildren(...nodes);
 }
 
-function renderGroup(group, config) {
-    const selection = config[group.key];
+function renderGroup(group, sectionConfig, config) {
+    const selection = sectionConfig[group.key];
     const fieldset = document.createElement('fieldset');
     fieldset.className = group.key;
     const legend = document.createElement('legend');

@@ -10,13 +10,17 @@ function show(id) {
     if (id === 'configure') {
         renderOptions(options, config);
     }
-    if (id === 'practice') {
-        startPractice(config);
-    }
 }
 
 for (const button of document.querySelectorAll('[data-screen]')) {
     button.addEventListener('click', () => show(button.dataset.screen));
+}
+
+for (const button of document.querySelectorAll('[data-practice]')) {
+    button.addEventListener('click', () => {
+        show('practice');
+        startPractice(config[button.dataset.practice], button.dataset.practice);
+    });
 }
 
 document.addEventListener('keydown', (event) => {

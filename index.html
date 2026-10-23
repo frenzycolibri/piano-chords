@@ -22,10 +22,164 @@
 <main id="home" class="screen">
     <h1 tabindex="-1">Piano Chords</h1>
     <nav class="menu">
-        <button type="button" data-screen="practice">Practice</button>
+        <button type="button" data-practice="scales">Practice scales</button>
+        <button type="button" data-practice="chords">Practice chords</button>
         <button type="button" data-screen="configure">Configure</button>
+        <button type="button" data-screen="cheatsheet">Cheatsheet</button>
     </nav>
 </main>
+<section id="cheatsheet" class="screen" hidden>
+    <header class="bar">
+        <button type="button" class="back" data-screen="home"><span aria-hidden="true">←</span> Back</button>
+        <h2 tabindex="-1">Cheatsheet</h2>
+    </header>
+    <div class="cheatsheet">
+        <section>
+            <h3>How chords are built</h3>
+            <p>A <strong>half step</strong> is the very next key, black or white. A <strong>full step</strong> is two half steps.</p>
+            <p>A chord is a root note plus notes a fixed number of half steps above it. The formula never changes with the key: C7 is always C – E – G – B♭. The key only decides whether a chord fits its scale.</p>
+        </section>
+        <section>
+            <h3>Chord types on C / Do</h3>
+            <table>
+                <thead>
+                    <tr><th>Chord</th><th>Formula</th><th>Half steps from root</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>C</td><td>Major triad</td><td>0 · 4 · 7</td><td>C – E – G / Do – Mi – Sol</td></tr>
+                    <tr><td>Cm</td><td>Minor triad: lower the 3rd</td><td>0 · 3 · 7</td><td>C – E♭ – G / Do – Mi♭ – Sol</td></tr>
+                    <tr><td>Cdim</td><td>Minor triad, lower the 5th</td><td>0 · 3 · 6</td><td>C – E♭ – G♭ / Do – Mi♭ – Sol♭</td></tr>
+                    <tr><td>Caug</td><td>Major triad, raise the 5th</td><td>0 · 4 · 8</td><td>C – E – G♯ / Do – Mi – Sol♯</td></tr>
+                    <tr><td>Csus2</td><td>Replace the 3rd with the 2nd</td><td>0 · 2 · 7</td><td>C – D – G / Do – Re – Sol</td></tr>
+                    <tr><td>Csus4</td><td>Replace the 3rd with the 4th</td><td>0 · 5 · 7</td><td>C – F – G / Do – Fa – Sol</td></tr>
+                    <tr><td>C7</td><td>Major triad + minor 7th</td><td>0 · 4 · 7 · 10</td><td>C – E – G – B♭ / Do – Mi – Sol – Si♭</td></tr>
+                    <tr><td>Cmaj7</td><td>Major triad + major 7th</td><td>0 · 4 · 7 · 11</td><td>C – E – G – B / Do – Mi – Sol – Si</td></tr>
+                    <tr><td>Cm7</td><td>Minor triad + minor 7th</td><td>0 · 3 · 7 · 10</td><td>C – E♭ – G – B♭ / Do – Mi♭ – Sol – Si♭</td></tr>
+                    <tr><td>Cm7♭5</td><td>Diminished triad + minor 7th</td><td>0 · 3 · 6 · 10</td><td>C – E♭ – G♭ – B♭ / Do – Mi♭ – Sol♭ – Si♭</td></tr>
+                    <tr><td>Cdim7</td><td>Diminished triad + diminished 7th</td><td>0 · 3 · 6 · 9</td><td>C – E♭ – G♭ – B𝄫 / Do – Mi♭ – Sol♭ – Si𝄫</td></tr>
+                    <tr><td>Cm(maj7)</td><td>Minor triad + major 7th</td><td>0 · 3 · 7 · 11</td><td>C – E♭ – G – B / Do – Mi♭ – Sol – Si</td></tr>
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h3>Finding the 7th quickly</h3>
+            <p>Go to the root one octave up, then step down:</p>
+            <ul>
+                <li><strong>maj7</strong>: down a half step. C → B gives Cmaj7.</li>
+                <li><strong>7</strong>, <strong>m7</strong>, <strong>m7♭5</strong>: down a full step. C → B♭ gives C7.</li>
+                <li><strong>dim7</strong>: down three half steps. C → B𝄫 (the A key) gives Cdim7.</li>
+            </ul>
+        </section>
+        <section>
+            <h3>Chords in a major key</h3>
+            <p><strong>Scale steps:</strong> full · full · half · full · full · full · half. On C: C – D – E – F – G – A – B – C.</p>
+            <p>Stacking every other note of a major scale always gives the same pattern. In C major:</p>
+            <table>
+                <thead>
+                    <tr><th>Degree</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                </thead>
+                <tbody>
+                    <tr><th>Triads</th><td>C</td><td>Dm</td><td>Em</td><td>F</td><td>G</td><td>Am</td><td>Bdim</td></tr>
+                    <tr><th>7th chords</th><td>Cmaj7</td><td>Dm7</td><td>Em7</td><td>Fmaj7</td><td>G7</td><td>Am7</td><td>Bm7♭5</td></tr>
+                </tbody>
+            </table>
+            <p>1 and 4 are major, 2, 3 and 6 are minor, 5 is the only dominant 7th and 7 is diminished.</p>
+        </section>
+        <section>
+            <h3>Chords in a minor key</h3>
+            <p><strong>Scale steps:</strong> full · half · full · full · half · full · full. On C: C – D – E♭ – F – G – A♭ – B♭ – C.</p>
+            <p>The natural minor scale uses the same notes as the major scale three half steps above it, starting from its 6th degree. In C minor, which shares its notes with E♭ major:</p>
+            <table>
+                <thead>
+                    <tr><th>Degree</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                </thead>
+                <tbody>
+                    <tr><th>Triads</th><td>Cm</td><td>Ddim</td><td>E♭</td><td>Fm</td><td>Gm</td><td>A♭</td><td>B♭</td></tr>
+                    <tr><th>7th chords</th><td>Cm7</td><td>Dm7♭5</td><td>E♭maj7</td><td>Fm7</td><td>Gm7</td><td>A♭maj7</td><td>B♭7</td></tr>
+                </tbody>
+            </table>
+            <p>1, 4 and 5 are minor, 3, 6 and 7 are major, 7 is the only dominant 7th and 2 is diminished.</p>
+        </section>
+        <section>
+            <h3>Chords in a harmonic minor key</h3>
+            <p><strong>Scale steps:</strong> full · half · full · full · half · 3 half steps · half. On C: C – D – E♭ – F – G – A♭ – B – C.</p>
+            <p>Harmonic minor raises the 7th of the natural minor scale by a half step. In C harmonic minor B♭ becomes B:</p>
+            <table>
+                <thead>
+                    <tr><th>Degree</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                </thead>
+                <tbody>
+                    <tr><th>Triads</th><td>Cm</td><td>Ddim</td><td>E♭aug</td><td>Fm</td><td>G</td><td>A♭</td><td>Bdim</td></tr>
+                    <tr><th>7th chords</th><td>Cm(maj7)</td><td>Dm7♭5</td><td>E♭maj7♯5</td><td>Fm7</td><td>G7</td><td>A♭maj7</td><td>Bdim7</td></tr>
+                </tbody>
+            </table>
+            <p>Every chord containing the 7th changes: 1 gets a major 7th, 3 becomes augmented, 5 becomes major with a dominant 7th and 7 becomes diminished. 2, 4 and 6 stay the same.</p>
+        </section>
+        <section>
+            <h3>Key signatures</h3>
+            <ul>
+                <li><strong>Sharps</strong> always appear in the order F – C – G – D – A – E – B. The major key is a half step above the last sharp: F♯ C♯ → D major.</li>
+                <li><strong>Flats</strong> always appear in the order B – E – A – D – G – C – F. The major key is the second-to-last flat: B♭ E♭ A♭ → E♭ major. One flat is F major.</li>
+                <li><strong>Minor</strong>: the minor key with the same signature is three half steps below the major key: E♭ major → C minor.</li>
+            </ul>
+            <table>
+                <thead>
+                    <tr><th>Sharps</th><th>Major</th><th>Minor</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>none</td><td>C major</td><td>A minor</td></tr>
+                    <tr><td>F♯</td><td>G major</td><td>E minor</td></tr>
+                    <tr><td>F♯ C♯</td><td>D major</td><td>B minor</td></tr>
+                    <tr><td>F♯ C♯ G♯</td><td>A major</td><td>F♯ minor</td></tr>
+                    <tr><td>F♯ C♯ G♯ D♯</td><td>E major</td><td>C♯ minor</td></tr>
+                    <tr><td>F♯ C♯ G♯ D♯ A♯</td><td>B major</td><td>G♯ minor</td></tr>
+                    <tr><td>F♯ C♯ G♯ D♯ A♯ E♯</td><td>F♯ major</td><td>D♯ minor</td></tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr><th>Flats</th><th>Major</th><th>Minor</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>B♭</td><td>F major</td><td>D minor</td></tr>
+                    <tr><td>B♭ E♭</td><td>B♭ major</td><td>G minor</td></tr>
+                    <tr><td>B♭ E♭ A♭</td><td>E♭ major</td><td>C minor</td></tr>
+                    <tr><td>B♭ E♭ A♭ D♭</td><td>A♭ major</td><td>F minor</td></tr>
+                    <tr><td>B♭ E♭ A♭ D♭ G♭</td><td>D♭ major</td><td>B♭ minor</td></tr>
+                    <tr><td>B♭ E♭ A♭ D♭ G♭ C♭</td><td>G♭ major</td><td>E♭ minor</td></tr>
+                </tbody>
+            </table>
+            <p>Major and minor share a signature, so look at the first note of the scale to tell them apart. Harmonic minor uses the minor key's signature plus its raised 7th, written as an accidental on the 7th note: a ♯, ♮ or 𝄪 on the last note of the scale means harmonic minor.</p>
+        </section>
+        <section>
+            <h3>Inversions</h3>
+            <p>Move the lowest note up an octave to get the next inversion. Chords are stacked thirds (3 or 4 half steps), so moving a note up leaves one wider gap of a fourth (5 half steps). Find that gap to find the root: the root is always the note just above it.</p>
+            <table>
+                <thead>
+                    <tr><th>Inversion</th><th>Notes</th><th>Gaps</th><th>Shape</th><th>Root</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Root position</td><td>C – E – G</td><td>3rd · 3rd</td><td>Evenly spaced, like a snowman</td><td>Bottom</td></tr>
+                    <tr><td>1st inversion</td><td>E – G – C</td><td>3rd · 4th</td><td>Wide gap at the top</td><td>Top</td></tr>
+                    <tr><td>2nd inversion</td><td>G – C – E</td><td>4th · 3rd</td><td>Wide gap at the bottom</td><td>Middle</td></tr>
+                </tbody>
+            </table>
+            <p>7th chords have four notes, so inverting them leaves a step (a 2nd, 1 or 2 half steps) instead of a gap. The root is the upper note of that step:</p>
+            <table>
+                <thead>
+                    <tr><th>Inversion</th><th>Notes</th><th>Gaps</th><th>Shape</th><th>Root</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Root position</td><td>C – E – G – B♭</td><td>3rd · 3rd · 3rd</td><td>Evenly spaced</td><td>Bottom</td></tr>
+                    <tr><td>1st inversion</td><td>E – G – B♭ – C</td><td>3rd · 3rd · 2nd</td><td>Step at the top</td><td>Top</td></tr>
+                    <tr><td>2nd inversion</td><td>G – B♭ – C – E</td><td>3rd · 2nd · 3rd</td><td>Step in the middle</td><td>Upper middle</td></tr>
+                    <tr><td>3rd inversion</td><td>B♭ – C – E – G</td><td>2nd · 3rd · 3rd</td><td>Step at the bottom</td><td>Lower middle</td></tr>
+                </tbody>
+            </table>
+            <p>The trick does not work for aug, dim7, sus2 and sus4: their inversions have no single odd gap, so count from the note names instead.</p>
+        </section>
+    </div>
+</section>
 <section id="configure" class="screen" hidden>
     <header class="bar">
         <button type="button" class="back" data-screen="home"><span aria-hidden="true">←</span> Back</button>

@@ -1,4 +1,4 @@
-const CACHE = 'piano-chords-v1';
+const CACHE = 'piano-chords-v2';
 const FILES = [
     './',
     'index.html',

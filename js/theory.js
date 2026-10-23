@@ -2,7 +2,6 @@ const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const SOLFEGE = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Si'];
 const NATURAL_PITCHES = [0, 2, 4, 5, 7, 9, 11];
 const ACCIDENTALS = new Map([[-2, '𝄫'], [-1, '♭'], [0, ''], [1, '♯'], [2, '𝄪']]);
-const NATURAL_SIGN = '♮';
 const INVERSIONS = ['Root position', '1st inversion', '2nd inversion', '3rd inversion'];
 const MINOR_TONICS = ['A', 'E', 'B', 'F#', 'C#', 'G#', 'Eb', 'Bb', 'F', 'C', 'G', 'D'];
 
@@ -43,10 +42,6 @@ function pitchClass(note) {
 
 function accidentalSymbol(accidental) {
     return ACCIDENTALS.get(accidental);
-}
-
-function writtenAccidental(accidental) {
-    return accidental === 0 ? NATURAL_SIGN : accidentalSymbol(accidental);
 }
 
 function inversionName(inversion) {

@@ -3,11 +3,14 @@ const HIGHEST_KEY = 91;
 const SPARKLE_COUNT = 24;
 const CELEBRATION_MS = 1100;
 const NO_CHORDS_MESSAGE = 'No chords match the current configuration.';
+const NO_SCALES_MESSAGE = 'No scales match the current configuration.';
 
 const practice = document.getElementById('practice');
 const question = document.getElementById('question');
 const keys = buildKeyboard(document.getElementById('keyboard'), LOWEST_KEY, HIGHEST_KEY, toggle);
 const selected = new Set();
+let kind = 'chords';
+let scales = [];
 let chords = [];
 let practiceTypes = [];
 let challenge = null;
@@ -30,17 +33,23 @@ document.getElementById('skip').addEventListener('click', () => {
     }
 });
 
-function startPractice(config) {
+function startPractice(config, practiceKind) {
     clearSparkles();
     answered = false;
+    kind = practiceKind;
+    scales = [];
     chords = [];
     for (const scale of SCALES) {
-        if (!config.scales.has(scale.id)) {
-            continue;
+        if (config.scales.has(scale.id)) {
+            scales.push(scale);
         }
-        for (const type of CHORD_TYPES) {
-            if (config.chordTypes.has(type.id)) {
-                chords.push(...chordsInScale(scale, type));
+    }
+    if (kind === 'chords') {
+        for (const scale of scales) {
+            for (const type of CHORD_TYPES) {
+                if (config.chordTypes.has(type.id)) {
+                    chords.push(...chordsInScale(scale, type));
+                }
             }
         }
     }
@@ -48,20 +57,28 @@ function startPractice(config) {
     challenge = null;
     clearSelection();
 
-    if (chords.length === 0 || practiceTypes.length === 0) {
-        locked = true;
-        question.replaceChildren(text('p', 'message', NO_CHORDS_MESSAGE));
-        announce(NO_CHORDS_MESSAGE);
+    if (kind === 'scales' && (scales.length === 0 || practiceTypes.length === 0)) {
+        showMessage(NO_SCALES_MESSAGE);
+        return;
+    }
+    if (kind === 'chords' && (chords.length === 0 || practiceTypes.length === 0)) {
+        showMessage(NO_CHORDS_MESSAGE);
         return;
     }
     next();
+}
+
+function showMessage(message) {
+    locked = true;
+    question.replaceChildren(text('p', 'message', message));
+    announce(message);
 }
 
 function next() {
     let candidate;
     do {
         candidate = createChallenge();
-    } while (challenge !== null && candidate.signature === challenge.signature);
+    } while (challenge !== null && candidate.signature === challenge.signature && !(kind === 'scales' && scales.length === 1 && practiceTypes.length === 1));
     challenge = candidate;
     clearSelection();
     clearSparkles();
@@ -72,6 +89,9 @@ function next() {
 }
 
 function createChallenge() {
+    if (kind === 'scales') {
+        return scaleChallenge();
+    }
     const chord = pick(chords);
     const inversion = Math.floor(Math.random() * chord.notes.length);
     const practiceType = pick(practiceTypes);
@@ -90,7 +110,7 @@ function createChallenge() {
             targets,
             size: notes.length,
             content: [scaleName, renderStaff(clef, chord.scale.signature, notes)],
-            questionText: `${chord.scale.name}. ${staffLabel(clef)}.`,
+            questionText: `${chord.scale.name}. ${staffLabel(clef, 'a chord')}.`,
             answer: [chordNameNode(chord), text('p', 'inversion', inversionName(inversion))],
             answerText: `${chordName(chord)}, ${inversionName(inversion)}`,
         };
@@ -110,6 +130,46 @@ function createChallenge() {
         content: [scaleName, chordNameNode(chord), text('p', 'inversion', inversionName(inversion))],
         questionText: `${chord.scale.name}. ${chordName(chord)}, ${inversionName(inversion)}.`,
         answer: [renderStaff(clef, chord.scale.signature, notes), text('p', 'note-names', noteNames(notes))],
+        answerText: noteNames(notes),
+    };
+}
+
+function scaleChallenge() {
+    const scale = pick(scales);
+    const practiceType = pick(practiceTypes);
+    const signature = `${scale.id}|${practiceType}`;
+    const { clef, notes } = pick(staffVoicings(scale.notes, 0));
+
+    if (practiceType === 'staff') {
+        const targets = new Set();
+        for (const note of notes) {
+            targets.add(note.midi);
+        }
+        return {
+            signature,
+            exact: true,
+            targets,
+            size: notes.length,
+            content: [renderScaleStaff(clef, scale.signature, notes)],
+            questionText: `${staffLabel(clef, 'a scale')}.`,
+            answer: [text('p', 'chord-name', scale.name)],
+            answerText: scale.name,
+        };
+    }
+
+    const targets = new Set();
+    for (const note of scale.notes) {
+        targets.add(pitchClass(note));
+    }
+    return {
+        signature,
+        exact: false,
+        targets,
+        size: scale.notes.length,
+        bass: null,
+        content: [text('p', 'chord-name', scale.name)],
+        questionText: `${scale.name}.`,
+        answer: [renderScaleStaff(clef, scale.signature, notes), text('p', 'note-names', noteNames(notes))],
         answerText: noteNames(notes),
     };
 }
@@ -166,7 +226,7 @@ function isComplete() {
     if (challenge.exact) {
         return true;
     }
-    return pitches.size === challenge.size && Math.min(...selected) % 12 === challenge.bass;
+    return pitches.size === challenge.size && (challenge.bass === null || Math.min(...selected) % 12 === challenge.bass);
 }
 
 function celebrate() {

@@ -128,6 +128,57 @@ h1 {
     align-items: start;
 }
 
+.cheatsheet {
+    flex: 1;
+    overflow: auto;
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    align-content: start;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+.cheatsheet section {
+    padding: 0.5rem 0.75rem 0.75rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+}
+
+.cheatsheet h3 {
+    margin: 0 0 0.5rem;
+    color: var(--accent);
+    font-size: 1rem;
+}
+
+.cheatsheet p,
+.cheatsheet ul {
+    margin: 0.4rem 0;
+}
+
+.cheatsheet table {
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.cheatsheet table + table {
+    margin-top: 0.75rem;
+}
+
+.cheatsheet th,
+.cheatsheet td {
+    padding: 0.3rem 0.75rem 0.3rem 0;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+
+.cheatsheet th {
+    color: var(--muted);
+    font-weight: 600;
+}
+
 fieldset {
     min-width: 0;
     margin: 0;
@@ -146,6 +197,13 @@ legend {
 .choices {
     display: grid;
     gap: 0.2rem 1rem;
+}
+
+.options-title {
+    grid-column: 1 / -1;
+    margin: 0.5rem 0 -0.25rem;
+    color: var(--accent);
+    font-size: 1.1rem;
 }
 
 .scales {
@@ -296,17 +354,11 @@ input[type="checkbox"] {
 }
 
 .accidental {
-    fill: var(--accent);
-    font-size: 15px;
-    text-anchor: middle;
-    dominant-baseline: central;
-    font-family: system-ui, "Noto Music", "Noto Sans Symbols 2", "Segoe UI Symbol", sans-serif;
-}
-
-.double-sharp {
+    fill: none;
     stroke: var(--accent);
-    stroke-width: 1.8;
+    stroke-width: 1.6;
     stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .keyboard {

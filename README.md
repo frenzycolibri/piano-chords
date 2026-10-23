@@ -4,7 +4,10 @@ A landscape piano chord trainer built with plain HTML, CSS and JavaScript — no
 
 ## Features
 
-- **Two practice types**
+- **Practice scales** with two practice types
+  - *Scale name → piano*: shows the scale name; press every note of the scale once, in any octave.
+  - *Treble/bass clef notation → piano*: shows the scale on a staff with its key signature; press exactly the keys shown.
+- **Practice chords** with two practice types
   - *Chord name → piano*: shows the scale, chord (e.g. `G7 / Sol7`) and required inversion.
   - *Treble/bass clef notation → piano*: shows the chord on a staff with the scale's key signature.
 - **Diatonic chords only**: a chord is asked only if all its notes belong to one of the selected scales.
@@ -19,9 +22,13 @@ A landscape piano chord trainer built with plain HTML, CSS and JavaScript — no
 - **Staff mode** — exactly the keys shown on the staff must be pressed.
 - **Name mode** — any octave is accepted, as long as each chord tone is pressed exactly once and the lowest key is the bass note of the requested inversion.
 
+## Cheatsheet
+
+Open **Cheatsheet** from the main menu for a reference of how each chord type is built (half steps from the root), with examples on C, a shortcut for finding 7ths, the chords of a major key and inversions.
+
 ## Configuration
 
-Open **Configure** from the main menu to choose scales, chord types and practice types (each group has an *All* toggle). Changes are saved to `localStorage` immediately. **Reset** clears the saved settings and selects everything.
+Open **Configure** from the main menu. It has two sections: **Practice scales** (scales and practice types) and **Practice chords** (scales, chord types and practice types), each group with an *All* toggle. Changes are saved to `localStorage` immediately. **Reset** clears the saved settings and selects everything.
 
 ## Controls
 
@@ -47,7 +54,7 @@ Then open <http://localhost:8000>. Installation on a phone requires HTTPS (e.g. 
 ## Project structure
 
 ```
-index.html            Screens: main menu, configure, practice
+index.html            Screens: main menu, configure, practice, cheatsheet
 style.css             Dark beige theme, layout, keyboard, staff, sparkles
 manifest.webmanifest  PWA manifest (fullscreen, landscape)
 sw.js                 Service worker (cache-first offline support)
